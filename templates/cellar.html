@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+{% set action = request.form.get('action')  %}
+
+
+{% if action %}
+  {% if 'line' in action %}
+    <p>{{ room.wrong_line_func() }}</p>
+  {% else %}
+    <p>{{ room.wrong_choice_func() }}</p>
+  {% endif %}
+{% endif %}
+
+<div class="line">
+  <form action="/" method="post">
+    <input type="text" name="action" autocomplete="off" autofocus>
+    <input type="submit" value="Choose!">
+  </form>
+</div>
+
+<iframe src="/invent" width="300" height="200"></iframe>
+{% endblock %}

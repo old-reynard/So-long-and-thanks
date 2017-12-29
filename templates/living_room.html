@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+{% block body %}
+
+{% set action = request.form.get('action')  %}
+{% set hobson = request.form.get('hobson')  %}
+{% set killer = request.form.get('killer') |lower|capitalize %}
+{% set victim = request.form.get('victim') |lower|capitalize %}
+
+{% if not hobson and not action and not victim and not killer and ca["puzzle_tried"] == 0 %}
+
+    <form action="/living_room" method="POST">
+      <input type="text" name="hobson" autofocus autocomplete="off">
+      <input type="SUBMIT" value="Nothing to do!">
+    </form>
+
+{% elif not (hobson and action and victim and killer) and ca["puzzle_tried"] == 1 and
+  (ca["killer"] == room.killer) and (ca["victim"] == room.victim)  %}
+
+    <p>'Yeah, okay, off you go. I won't tell.' </p>
+    <p>Wow, that worked! I am storming out into the hall.</p>
+    <form action="/living_room" method="POST">
+      <input type="button" onclick="location.href='/hall';" autofocus value="Let's!"/>
+    </form>
+
+{% elif not (hobson and action and victim and killer) and ca["puzzle_tried"] == 1 and
+  ((ca["killer"] != room.killer) or (ca["victim"] != room.victim))  %}
+    <p>'Nah, that's not good enough. Muuuum!!'</p>
+    <form action="/living_room" method="POST">
+      <input type="button" onclick="location.href='/busted';" value="Whoopsie!"/>
+    </form>
+
+{% elif (hobson in room.noes) and (not action) %}
+  <p>{{room.brat}}</p>
+  <form action="/living_room" method="POST">
+    <input type="button" onclick="location.href='/busted';" value="Whoopsie!"/>
+  </form>
+
+{% elif hobson in room.yeses %}
+    <p>{{ room.puzzle_text()}}</p>
+
+    {% set puzzle_list = room.puzzle()  %}
+    <ul style="list-style-type:circle; padding: 0; font-size:16px;">
+      {% for i in puzzle_list %}
+        <li>{{i}}</li>
+      {% endfor %}
+    </ul>
+    <p>'Okay, dad, whaddya think, who's the killer?'</p>
+
+    <form action="/living_room" method="POST">
+      <input type="text" name="killer" autocomplete="off" autofocus>
+      <input type="SUBMIT" value="He's the baddie!">
+    </form>
+
+{% elif (hobson not in room.yeses) and (hobson not in room.noes) and not killer and not victim %}
+    <p>{{ room.daughter_irritation() }}</p>
+    <form action="/living_room" method="POST">
+      <input type="text" name="hobson" autofocus autocomplete="off">
+      <input type="SUBMIT" value="Nothing to do!">
+    </form>
+
+{% elif (not hobson) and (killer) and (killer not in room.criminals) and not victim %}
+    <p>{{ room.daughter_irritation() }}</p>
+    <form action="/living_room" method="POST">
+      <input type="text" name="hobson" autofocus autocomplete="off">
+      <input type="SUBMIT" value="Nothing to do!">
+    </form>
+
+{% elif (not hobson) and (killer) and (killer in room.criminals) %}
+    {% do ca.update({"killer": killer}) %}
+    <p>'Alright then, and who's the victim?'</p>
+    <form action="/living_room" method="POST">
+      <input type="text" name="victim" autocomplete="off" autofocus>
+      <input type="SUBMIT" value="Poor thingie!">
+    </form>
+
+{% elif (not hobson) and (not action) and victim in room.criminals %}
+    {% do ca.update({"victim": victim}) %}
+    {% do ca.update({"puzzle_tried": 1}) %}
+    <p>'Wait a moment, let me check with the book.'</p>
+    <form action="/living_room" method="post">
+      <input type="submit" name="wait" value="Wait!" autofocus>
+    </form>
+
+{% elif (not hobson) and (not action) and victim not in room.criminals %}
+    <p>{{ room.daughter_irritation() }}</p>
+    <form action="/living_room" method="POST">
+      <input type="text" name="hobson" autofocus autocomplete="off">
+      <input type="SUBMIT" value="Nothing to do!">
+    </form>
+{% else %}
+      <p>I really hoped you'd pay attention, old man.</p>
+      <form action="/living_room" method="POST">
+        <input type="button" onclick="location.href='/busted';" value="Whoopsie!"/>
+      </form>
+
+{% endif %}
+<!--Puzzle tried {{ca["puzzle_tried"]}} <br>
+killer in the dict: {{ca["killer"]}} {{ ca["killer"] == room.killer}} {{ room.killer }}<br>
+victim in the dict: {{ca["victim"]}} {{ ca["victim"] == room.victim}} {{ room.victim }}<br>
+{{killer}} <br>
+{{victim}}<br>
+{{hobson}}
+{{inv}}-->
+<iframe src="/invent" width="300" height="200"></iframe>
+{% endblock %}

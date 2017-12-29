@@ -1,0 +1,8 @@
+body {
+  /* Set margin to 0 pixels on all sides */
+  margin: 0px;
+  /* Set font family to be Helvetica or Arial */
+  font-family: Helvetica;
+  /* Set line height to be 1.5 times larger than default */
+  line-height: 1.5;
+}

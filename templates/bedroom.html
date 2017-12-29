@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block body %}
+{% set action = request.form.get('action') %}
+
+
+{% if not action %}
+  <p>
+    <ul style="list-style-type:none; width:250px; margin:auto;">
+      {% for key, value in room.opts_dict.items() %}
+      <li>{{ key }}    {{ value }}</li>
+      {% endfor %}
+    </ul>
+  </p>
+
+{% elif action in room.opts_dict.keys() %}
+
+  {% set phrase = room.enter(action) %}
+
+  <p>
+    <ul style="list-style-type:none; padding: 0">
+      {% for one in phrase %}
+      <li>{{ one }}</li>
+      {% endfor %}
+    </ul>
+  </p>
+
+  <div class="opts" width="400" height="250">
+    <p>{{room.opts|safe}}</p>
+  </div>
+{% elif room.count >= 6 %}
+  <p>Busted!!</p>
+
+
+{% else %}
+  <p>C'mon, focus!</p>
+  <div class="opts" width="400" height="250">
+    <p>{{room.opts|safe}}</p>
+  </div>
+{% endif %}
+
+<form action="/bedroom" method="POST">
+  <input type="text" name="action" autocomplete="off" autofocus>
+  <input type="SUBMIT" value="Let's try that">
+</form>
+
+
+
+<!--count {{ room.count }} <br>
+love count {{room.love_count}} <br>
+convo {{room.conversation}} <br>
+list {{room.begging}}-->
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block body %}
+
+{% if won == 1 %}
+  <p>{{ room.win() }}</p>
+
+{% elif won == 2 or room.ending == 1 %}
+  <p>{{room.dog_ending()}}</p>
+  <p>{{room.busted_text}}</p>
+  <p>{{ room.finita() }}</p>
+  <h5>Game over!</h5>
+
+{% elif won == 3 %}
+  <p>Fine. To hell with this fishing. I'll stay in today.</p>
+
+{% else %}
+  <p>{{ room.finita() }}</p>
+  <p><h5>Game over!</h5></p>
+
+{% endif %}
+
+
+<form action="/busted" method="POST">
+  <input type="button" onclick="location.href='/';" value="Try again!"/>
+</form>
+
+<footer>© K. 2017</footer>
+{% endblock %}

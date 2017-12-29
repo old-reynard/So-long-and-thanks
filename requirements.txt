@@ -1,0 +1,8 @@
+Flask==0.12.2
+Jinja2==2.10
+Werkzeug==0.12.2
+certifi==2017.7.27.1
+chardet==3.0.4
+psycopg2==2.7
+requests==2.18.4
+django==2.0

@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block body %}
+
+{% set action = request.form.get('action')  %}
+
+{% if not action %}
+    <p>{{room.open_toolbox()}}</p>
+    <form action="/toolbox" method="post">
+      <input type="text" name="action" autocomplete="off" autofocus>
+      <input type="submit" value="Take!">
+    </form>
+
+{% elif room.toolboxlist == [] %}
+    <form action="/toolbox" method="post">
+      <input type="submit" value="Alright, next!">
+    </form>
+{% else %}
+    <p>{{ room.toolbox_func(action) }}</p>
+    <form action="/toolbox" method="post">
+      <input type="text" name="action" autocomplete="off" autofocus>
+      <input type="submit" value="Take!">
+    </form>
+{% endif %}
+
+<iframe src="/invent" width="300" height="250"></iframe>
+
+<!--{{inv}}D:\wrk\lpthw\SLAT\templates\inventory.html-->
+{% endblock %}

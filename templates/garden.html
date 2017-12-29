@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block body %}
+{% set action = request.form.get('action')  %}
+
+
+{% if not action %}
+<form action="/garden" method="POST">
+  <input type="text" name="action" autocomplete="off" autofocus>
+  <input type="SUBMIT" value="Mix this crap!">
+</form>
+
+{% elif action == 'black' %}
+<p>{{room.taking_colors (action)}}</p>
+<form action="/garden" method="POST">
+  <input type="button" onclick="location.href='/busted';" value="Whoopsie!"/>
+</form>
+
+{% elif action and (room.bucket_empty | length < 1) and action != 'black'%}
+  <p>{{room.taking_colors (action)}}</p>
+    <p>What's next?</p>
+    <form action="/garden" method="POST">
+      <input type="text" name="action" autocomplete="off" autofocus>
+      <input type="SUBMIT" value="Mix this crap!">
+    </form>
+
+{% elif action not in room.buckets and (('white' not in room.buckets) and ('orange' not in room.buckets)) %}
+  <p>{{room.misunderstood()}}</p>
+  <form action="/garden" method="POST">
+    <input type="text" name="action" autocomplete="off" autofocus>
+    <input type="SUBMIT" value="Mix this crap!">
+  </form>
+
+{% elif action and (room.bucket_empty | length == 1) and (action in room.buckets) %}
+  <p>{{room.taking_colors (action)}}</p>
+  {% set insuccess = room.mixing_colors() %}
+  <p>{{room.insuccessful(insuccess)}}</p>
+  <p hidden>{{room.check_buckets(room.buckets)}}</p>
+
+  <form action="/garden" method="POST">
+    <input type="text" name="action" autocomplete="off" autofocus>
+    <input type="SUBMIT" value="Mix this crap!">
+  </form>
+
+{% elif action and room.passed_garden == 1 %}
+  <p>Yeah? Did I just do it?</p>
+  <form action="/garden" method="POST">
+    <input type="button" onclick="location.href='/busted';" value="Oh!"/>
+  </form>
+
+{% else %}
+  <p>{{room.empty_baskets()}}</p>
+  <p>Oops, something went terribly wrong. I'll just start again.</p>
+  <form action="/garden" method="POST">
+    <input type="text" name="action" autocomplete="off" autofocus>
+    <input type="SUBMIT" value="Mix this crap!">
+  </form>
+
+{% endif %}
+{% set color_bucket = 'yellow'  %}
+<div class="buckets" width="300" height="550">
+  <h4>Art, bitch!</h4>
+  <ul style="list-style-type: none; text-align: left;">
+    {% for i in room.buckets %}
+    <li><i class="fa fa-paint-brush" style="font-size:24px;color:{{i}}"></i></li>
+    {% endfor %}
+  </ul>
+
+
+
+</div>
+
+<!--bucket_empty {{room.bucket_empty}} <br>
+length of bucket_empty {{room.bucket_empty |length}} <br>
+buckets {{room.buckets}}<br>
+length buckets {{room.buckets |length}} <br>
+needed {{room.needed}}
+check buckets {{room.passed_garden}}-->
+{% endblock %}

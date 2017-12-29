@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block body %}
+{% set action = request.form.get('action')  %}
+{% set puzzle = request.form.get('puzzle')  %}
+
+{% if not action and not puzzle %}
+    <p>Well, are you ready, human? </p>
+    <form action="/hall" method="POST">
+      <input type="text" name="action" autofocus autocomplete="off">
+      <input type="SUBMIT"value="Ouch!">
+    </form>
+
+
+{% elif action in room.yeses and not puzzle %}
+    <p>{{ room.hall_puzzle_func() }}</p>
+    <form action="/hall" method="POST">
+      <input type="text" name="puzzle" autofocus autocomplete="off">
+      <input type="SUBMIT"value="Ha!">
+    </form>
+
+{% elif not action and puzzle == 'both' %}
+    <p>{{room.cat_win}}</p>
+    <form action="/hall" method="POST">
+      <input type="button" onclick="location.href='/garden';" value="Ha!"/>
+    </form>
+
+{% elif not action and puzzle != 'both' %}
+<p>{{room.cat_lose}}</p>
+<form action="/hall" method="POST">
+  <input type="button" onclick="location.href='/busted';" value="Whoopsie!"/>
+</form>
+
+{% elif (action in room.noes) or (not action and puzzle and (puzzle != 'both')) %}
+    <p>{{room.cat_refuse}}</p>
+    <form action="/hall" method="POST">
+      <input type="button" onclick="location.href='/busted';" value="Whoopsie!"/>
+    </form>
+
+
+{% endif %}
+{% endblock %}

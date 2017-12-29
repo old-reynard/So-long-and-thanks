@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+{% set action = request.form.get('action') %}
+
+{% if not action %}
+<form action="/shelves" method="post">
+  <input type="text" name="action" autocomplete="off" autofocus>
+  <input type="submit" value="Choose!">
+</form>
+{% elif ('look' in action) or ('around' in action) %}
+  <p> {{ room.look_around (action) }}</p>
+  <form action="/shelves" method="post">
+    <input type="text" name="action" autocomplete="off" autofocus>
+    <input type="submit" value="Choose!">
+  </form>
+{% elif ('climb' in action) or ('up' in action) %}
+  <p>{{ room.climb_shelves() }}</p>
+  <form action="/shelves" method="POST">
+    <input type="button" onclick="location.href='/busted';" value="Whoopsie!"/>
+  </form>
+{% elif 'ladder' in action %}
+  <p>{{ room.ladder() }}</p>
+  <form action="/shelves" method="POST">
+    <input type="button" onclick="location.href='/busted';" value="Whoopsie!"/>
+  </form>
+{% elif 'crate' in action %}
+  <p>{{ room.crates () }}</p>
+  <form action="/shelves" method="post">
+    <input type="text" name="crates" autocomplete="off" autofocus>
+    <input type="submit" value="Yaaas!">
+  </form>
+{% else %}
+  <p>{{res.misunderstood()}}</p>
+  <form action="/shelves" method="post">
+    <input type="text" name="action" autocomplete="off" autofocus>
+    <input type="submit" value="Choose!">
+  </form>
+{% endif %}
+
+<iframe src="/invent" width="300" height="200"></iframe>
+<!--{{inv}}-->
+{% endblock %}

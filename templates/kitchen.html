@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+{% set action = request.form.get('action') %}
+
+{% if not action  %}
+
+{% elif action in room.choice_kitchen  %}
+  <p>{{ room.last_minute }}</p>
+  <p>{{ room.leave_kitchen }}</p>
+
+{% elif action in room.neg_choice_kitchen  %}
+  <p>{{ room.leave_kitchen }}</p>
+
+{% else %}
+  <p>Bedroom or living room?</p>
+
+{% endif %}
+
+<form action="/kitchen" method="POST">
+  <input type="text" name="action" autocomplete="off" autofocus>
+  <input type="SUBMIT" value="Get!">
+</form>
+
+<iframe src="/invent" width="300" height="200"></iframe>
+<!--{{inv}}-->
+{% endblock %}
