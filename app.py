@@ -134,6 +134,6 @@ def busted():
 def invent ():
     return render_template('inventory.html', inv=inventory)
 
-app.secret_key = "the axiom you can't deny or better"
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
